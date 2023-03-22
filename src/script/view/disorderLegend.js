@@ -89,13 +89,19 @@ const DisorderLegend = Class.create(Legend, {
     usedColors.each( function(color) {
       prefColors = prefColors.without(color);
     });
-    if (disorderID === 'affected') {
-      if (usedColors.indexOf('#FEE090') > -1 ) {
-        return '#dbad71';
-      } else {
-        return '#FEE090';
+
+    // color code specific disorders
+    for (const iDisorder of this._terminology._terms) {
+      if (iDisorder.value === disorderID) {
+        if (iDisorder.hasOwnProperty("color")) {
+          return iDisorder.color;
+        } else {
+          break;
+        }
+
       }
     }
+
     if(prefColors.length > 0) {
       return prefColors[0];
     } else {
