@@ -75,14 +75,11 @@ const Legend = Class.create({
   getTerm: function (termId) {
     const id = this._terminology.sanitizeID(termId);
     if (!this._cache.hasOwnProperty(id)) {
-      this._cache[id] = this._terminology.createTerm(id, null, () => this._updateTermName(id));
+      // this if statement is usually called when loading a save file containing
+      // a disorder not seen, thus not in cache
+      this.addToCache(id, id);
     }
     return this._cache[id];
-  },
-
-  _updateTermName: function (id) {
-    const name = this._legendBox.down('li#' + this._getPrefix(id) + '-' + id + ' .disorder-name');
-    name.update(this._cache[id].getName());
   },
 
   getCurrentTerms: function () {

@@ -16,12 +16,12 @@ var editor;
 document.observe('dom:loaded', function () {
 
   var disorders = [
-    { 'value': 'GIGA', 'text': 'Gigantism', 'color': '#010101'},
-    { 'value': 'ACRO', 'text': 'Acromegaly', 'color': '#808080' },
-    { 'value': 'PROL', 'text': 'Prolactinoma', 'color': '#FF0000' },
-    { 'value': 'NFPA', 'text': 'Non-functioning pituitary adenoma (NFPA)' , 'color': '#A020F0'},
-    { 'value': 'CUSH', 'text': 'Cushings/corticotrophgantism' , 'color':  '#00FF00'},
-    { 'value': 'GONA', 'text': 'Gonadatroph', 'color':  '#964B00'}
+    { 'value': 'Gigantism', 'text': 'Gigantism', 'color': '#010101'},
+    { 'value': 'Acromegaly', 'text': 'Acromegaly', 'color': '#808080' },
+    { 'value': 'Prolactinoma', 'text': 'Prolactinoma', 'color': '#FF0000' },
+    { 'value': 'Non-functioning pituitary adenoma (NFPA)', 'text': 'Non-functioning pituitary adenoma (NFPA)' , 'color': '#A020F0'},
+    { 'value': 'Cushings/corticotrophgantism', 'text': 'Cushings/corticotrophgantism' , 'color':  '#00FF00'},
+    { 'value': 'Gonadatroph', 'text': 'Gonadatroph', 'color':  '#964B00'}
   ]
   var editor = new PedigreeEditor({
     'disorderOptions': {

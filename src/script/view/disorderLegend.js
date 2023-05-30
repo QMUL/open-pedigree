@@ -19,6 +19,12 @@ const DisorderLegend = Class.create(Legend, {
       new RegExp('^OvCa',  'i'),
       new RegExp('^ProCa', 'i'),
       new RegExp('^PanCa', 'i') ];
+
+    // make the provided disorders known by putting it in cache
+    for (const id of Object.keys(this._terminology._lookup)) {
+      this.addToCache(id, this._terminology._lookup[id]);
+    }
+
   },
 
   _getPrefix: function(id) {
