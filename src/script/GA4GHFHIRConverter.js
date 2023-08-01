@@ -1387,12 +1387,7 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
         'status': 'preliminary',
         'subject': { 'reference': this.patRefAsRef(ref)}
       };
-      let cc = fhirTerminologyHelper.getCodeableConceptFromGene(candidateGenes[j]);
-      if (cc.coding){
-        fhirObservation['valueCodeableConcept'] = cc;
-      } else {
-        fhirObservation['valueString'] = genePrefix + candidateGenes[j];
-      }
+      fhirObservation['valueString'] = genePrefix + candidateGenes[j];
       observationsForRef.push(fhirObservation);
     }
   }
