@@ -43,7 +43,7 @@ var PedigreeEditor = Class.create({
 
     // front end configurations
     var returnUrl = options.returnUrl || 'https://github.com/phenotips/open-pedigree';
-    
+
     // URL to load patient data from and save data to
     var patientDataUrl = options.patientDataUrl || '';
     var backend = options.backend || {};
@@ -106,7 +106,7 @@ var PedigreeEditor = Class.create({
 
     this._controller = new Controller();
 
-    
+
     //attach actions to buttons on the top bar
     var undoButton = $('action-undo');
     undoButton && undoButton.on('click', function(event) {
@@ -456,14 +456,14 @@ var PedigreeEditor = Class.create({
           { 'actual' : '', 'displayed' : 'Not affected' },
           { 'actual' : 'carrier', 'displayed' : 'Carrier' },
           { 'actual' : 'affected', 'displayed' : 'Affected' },
-          { 'actual' : 'presymptomatic', 'displayed' : 'Pre-symptomatic' }
+          { 'actual' : 'presymptomatic', 'displayed' : 'At Risk' }
         ],
         'default' : '',
         'function' : 'setCarrierStatus'
       },
       {
         'name' : 'evaluated',
-        'label' : 'Documented evaluation',
+        'label' : 'Tested',
         'type' : 'checkbox',
         'tab': 'Clinical',
         'function' : 'setEvaluated'
@@ -659,7 +659,7 @@ var PedigreeEditor = Class.create({
       },
       {
         'name' : 'evaluatedGrp',
-        'label' : 'Documented evaluation',
+        'label' : 'Tested',
         'type' : 'checkbox',
         'function' : 'setEvaluated'
       },
