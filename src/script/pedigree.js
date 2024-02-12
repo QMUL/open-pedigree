@@ -462,13 +462,6 @@ var PedigreeEditor = Class.create({
         'function' : 'setCarrierStatus'
       },
       {
-        'name' : 'evaluated',
-        'label' : 'Tested',
-        'type' : 'checkbox',
-        'tab': 'Clinical',
-        'function' : 'setEvaluated'
-      },
-      {
         'name' : 'disorders',
         'label' : 'Disorders',
         'type' : 'disease-picker',
@@ -574,8 +567,27 @@ var PedigreeEditor = Class.create({
         'tab': 'Clinical',
         'rows' : 2,
         'function' : 'setComments'
+      },
+      {
+        'name' : 'evaluated',
+        'label' : 'Tested',
+        'type' : 'checkbox',
+        'tab': 'Tests',
+        'function' : 'setEvaluated'
+      },
+      {
+        'name' : 'sample_availability',
+        'label' : 'Sample availability',
+        'type' : 'checkbox',
+        'tab': 'Tests',
+      },
+      {
+        'name' : 'sample_location',
+        'label' : 'Sample location',
+        'type' : 'text',
+        'tab': 'Tests',
       }
-    ], ['Personal', 'Clinical']);
+    ], ['Personal', 'Clinical', 'Tests']);
   },
 
   /**
