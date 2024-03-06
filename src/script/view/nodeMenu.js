@@ -91,7 +91,7 @@ var NodeMenu = Class.create({
         insertLocation.insert(_this._generateField[d.type].call(_this, d));
       }
     });
-    
+
     // Date picker event queues used to fire only the last on change event after user is inactive for X secs.
     this._datepickerEventQueue = {
       'date_of_birth': [],

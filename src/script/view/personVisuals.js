@@ -38,6 +38,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     this._isSelected = false;
     this._carrierGraphic = null;
     this._evalLabel = null;
+    this._sampleAvailabilityLabel = null;
     //console.log("person visuals end");
     //timer.printSinceLast("Person visuals time");
   },
@@ -105,6 +106,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     this.updateDisorderShapes();
     this.updateCarrierGraphic();
     this.updateEvaluationLabel();
+    this.updateSampleAvailabilityLabel();
   },
 
   generateProbandArrow: function() {
@@ -414,26 +416,62 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   updateEvaluationLabel: function() {
     this._evalLabel && this._evalLabel.remove();
     if (this.getNode().getEvaluated()) {
-      if (this.getNode().getLifeStatus() == 'aborted' || this.getNode().getLifeStatus() == 'miscarriage') {
-        var x = this.getX() + this._shapeRadius * 1.6;
-        var y = this.getY() + this._shapeRadius * 0.6;
-      } else {
-        var mult = 1.1;
-        if (this.getNode().getGender() == 'U') {
-          mult = 1.3;
-        } else if (this.getNode().getGender() == 'M') {
-          mult = 1.4;
-        }
-        if (this.getNode().isProband) {
-          mult *= 1.1;
-        }
-        var x = this.getX() + this._shapeRadius*mult - 5;
-        var y = this.getY() + this._shapeRadius*mult;
-      }
-      this._evalLabel = editor.getPaper().text(x, y, '*').attr(PedigreeEditorParameters.attributes.evaluationShape).toBack();
+      this._evalLabel = this.getLabel('*', 'bottom-right');
     } else {
       this._evalLabel = null;
     }
+  },
+
+  /**
+     * Draws the sample availability status symbol for this Person
+     *
+     * @method updateSampleAvailabilityLabel
+     */
+   updateSampleAvailabilityLabel: function() {
+    this._sampleAvailabilityLabel && this._sampleAvailabilityLabel.remove();
+    if (this.getNode().getSampleAvailability()) {
+      this._sampleAvailabilityLabel = this.getLabel('†', 'top-right');
+    } else {
+      this._sampleAvailabilityLabel = null;
+    }
+  },
+
+  /**
+     * Return the graphics for a node's symbol or label
+     *
+     * @method getLabel
+     */
+  getLabel: function(symbol, position) {
+    var x;
+    var y;
+    if (this.getNode().getLifeStatus() == 'aborted' || this.getNode().getLifeStatus() == 'miscarriage') {
+      if (position === 'bottom-right') {
+        x = this.getX() + this._shapeRadius * 1.6;
+        y = this.getY() + this._shapeRadius * 0.6;
+      } else if (position === 'top-right') {
+        x = this.getX() + this._shapeRadius * 1.6;
+        y = this.getY() - this._shapeRadius * 0.6;
+      }
+    } else {
+      var mult = 1.1;
+      if (this.getNode().getGender() == 'U') {
+        mult = 1.3;
+      } else if (this.getNode().getGender() == 'M') {
+        mult = 1.4;
+      }
+      if (this.getNode().isProband) {
+        mult *= 1.1;
+      }
+
+      if (position === 'bottom-right') {
+        x = this.getX() + this._shapeRadius*mult - 5;
+        y = this.getY() + this._shapeRadius*mult;
+      } else if (position === 'top-right') {
+        x = this.getX() + this._shapeRadius*mult - 5;
+        y = this.getY() - this._shapeRadius*mult - 5;
+      }
+    }
+    return editor.getPaper().text(x, y, symbol).attr(PedigreeEditorParameters.attributes.evaluationShape).toBack();
   },
 
   /**
@@ -444,6 +482,16 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      */
   getEvaluationGraphics: function() {
     return this._evalLabel;
+  },
+
+  /**
+     * Returns this Person's sample availability label
+     *
+     * @method getSampleAvailabilityGraphics
+     * @return {Raphael.el}
+     */
+  getSampleAvailabilityGraphics: function() {
+    return this._sampleAvailabilityLabel;
   },
 
   /**
@@ -708,7 +756,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      */
   getAllGraphics: function($super) {
     //console.log("Node " + this.getNode().getID() + " getAllGraphics");
-    return $super().push(this.getHoverBox().getBackElements(), this.getLabels(), this.getCarrierGraphics(), this.getEvaluationGraphics(), this.getHoverBox().getFrontElements());
+    return $super().push(this.getHoverBox().getBackElements(), this.getLabels(), this.getCarrierGraphics(), this.getEvaluationGraphics(), this.getSampleAvailabilityGraphics(), this.getHoverBox().getFrontElements());
   },
 
   /**

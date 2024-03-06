@@ -54,6 +54,7 @@ var Person = Class.create(AbstractPerson, {
     this._twinGroup = null;
     this._monozygotic = false;
     this._evaluated = false;
+    this._sampleAvailability = false;
     this._lostContact = false;
   },
 
@@ -202,6 +203,16 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
+     * Returns the sample availability status
+     *
+     * @method getSampleAvailability
+     * @return {Boolean}
+     */
+  getSampleAvailability: function() {
+    return this._sampleAvailability;
+  },
+
+  /**
      * Sets the documented evaluation status
      *
      * @method setEvaluated
@@ -212,6 +223,19 @@ var Person = Class.create(AbstractPerson, {
     }
     this._evaluated = evaluationStatus;
     this.getGraphics().updateEvaluationLabel();
+  },
+
+  /**
+     * Sets the documented sample availability status
+     *
+     * @method setSampleAvailability
+     */
+  setSampleAvailability: function(sampleAvailability) {
+    if (sampleAvailability === this._sampleAvailability) {
+      return;
+    }
+    this._sampleAvailability = sampleAvailability;
+    this.getGraphics().updateSampleAvailabilityLabel();
   },
 
   /**
@@ -894,6 +918,7 @@ var Person = Class.create(AbstractPerson, {
       placeholder:   {value : false, inactive: true },
       monozygotic:   {value : this.getMonozygotic(), inactive: inactiveMonozygothic, disabled: disableMonozygothic },
       evaluated:     {value : this.getEvaluated() },
+      sample_availability:     {value : this.getSampleAvailability() },
       hpo_positive:  {value : phenotypeTerms},
       nocontact:     {value : this.getLostContact(), inactive: inactiveLostContact}
     };
@@ -957,6 +982,9 @@ var Person = Class.create(AbstractPerson, {
     }
     if (this._evaluated) {
       info['evaluated'] = this._evaluated;
+    }
+    if (this._sampleAvailability) {
+      info['sampleAvailability'] = this._sampleAvailability;
     }
     if (this._carrierStatus) {
       info['carrierStatus'] = this._carrierStatus;
@@ -1022,6 +1050,9 @@ var Person = Class.create(AbstractPerson, {
       }
       if(info.hasOwnProperty('evaluated') && this._evaluated !== info.evaluated) {
         this.setEvaluated(info.evaluated);
+      }
+      if(info.hasOwnProperty('sampleAvailability') && this._sampleAvailability !== info.sampleAvailability) {
+        this.setSampleAvailability(info.sampleAvailability);
       }
       if(info.hasOwnProperty('carrierStatus') && this._carrierStatus !== info.carrierStatus) {
         this.setCarrierStatus(info.carrierStatus);
