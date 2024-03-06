@@ -544,6 +544,12 @@ GA4GHFHIRConverter.extractDataFromObservation = function (observationResource, n
           foundCode = true;
           break;
         }
+        if (coding.system === 'custom' && coding.display === 'sampleAvailability'
+          && observationResource.valueBoolean) {
+          nodeData.properties['sampleAvailability'] = true;
+          foundCode = true;
+          break;
+        }
       }
     }
   }
@@ -1526,6 +1532,24 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
           'system': 'http://loinc.org',
           'code': '96172-2',
           'display': 'Clinical genetics Evaluation note'
+        }]
+      },
+      'subject': { 'reference': this.patRefAsRef(ref) },
+      'valueBoolean': true
+    };
+    observationsForRef.push(fhirObservation);
+  }
+  // add sample availability as an observation
+  if (nodeProperties['sampleAvailability']) {
+    let fhirObservation = {
+      'resourceType': 'Observation',
+      'id': generateUUID(),
+      'status': 'preliminary',
+      'code': {
+        'coding': [{
+          'system': 'custom',
+          'code': null,
+          'display': 'sampleAvailability'
         }]
       },
       'subject': { 'reference': this.patRefAsRef(ref) },
