@@ -39,6 +39,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     this._carrierGraphic = null;
     this._evalLabel = null;
     this._sampleAvailabilityLabel = null;
+    this._sampleLocationLabel = null;
     //console.log("person visuals end");
     //timer.printSinceLast("Person visuals time");
   },
@@ -427,7 +428,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      *
      * @method updateSampleAvailabilityLabel
      */
-   updateSampleAvailabilityLabel: function() {
+  updateSampleAvailabilityLabel: function() {
     this._sampleAvailabilityLabel && this._sampleAvailabilityLabel.remove();
     if (this.getNode().getSampleAvailability()) {
       this._sampleAvailabilityLabel = this.getLabel('†', 'top-right');
@@ -435,6 +436,33 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
       this._sampleAvailabilityLabel = null;
     }
   },
+
+  /**
+     * Updates the external ID label for this Person
+     *
+     * @method updateSampleLocationLabel
+     */
+  updateSampleLocationLabel: function() {
+    this._sampleLocationLabel && this._sampleLocationLabel.remove();
+    if (this.getNode().getSampleLocation()) {
+      var text = '† ' + this.getNode().getSampleLocation();
+      this._sampleLocationLabel = editor.getPaper().text(this.getX(), this.getY() + PedigreeEditorParameters.attributes.radius, text).attr(PedigreeEditorParameters.attributes.externalIDLabels);
+    } else {
+      this._sampleLocationLabel = null;
+    }
+    this.drawLabels();
+  },
+
+  /**
+     * Returns the sample location label
+     *
+     * @method getExternalIDLabel
+     * @return {Raphael.el}
+     */
+  getSampleLocationLabel: function() {
+    return this._sampleLocationLabel;
+  },
+
 
   /**
      * Return the graphics for a node's symbol or label
@@ -691,6 +719,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     this.getNameLabel() && labels.push(this.getNameLabel());
     this.getAgeLabel() && labels.push(this.getAgeLabel());
     this.getExternalIDLabel() && labels.push(this.getExternalIDLabel());
+    this.getSampleLocationLabel() && labels.push(this.getSampleLocationLabel());
     this.getCommentsLabel() && labels.push(this.getCommentsLabel());
     return labels;
   },

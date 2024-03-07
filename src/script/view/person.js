@@ -55,6 +55,7 @@ var Person = Class.create(AbstractPerson, {
     this._monozygotic = false;
     this._evaluated = false;
     this._sampleAvailability = false;
+    this._sampleLocation = '';
     this._lostContact = false;
   },
 
@@ -213,6 +214,15 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
+     * Returns the location of the sample
+     *
+     * @method getSampleLocation
+     */
+  getSampleLocation: function() {
+    return this._sampleLocation;
+  },
+
+  /**
      * Sets the documented evaluation status
      *
      * @method setEvaluated
@@ -236,6 +246,19 @@ var Person = Class.create(AbstractPerson, {
     }
     this._sampleAvailability = sampleAvailability;
     this.getGraphics().updateSampleAvailabilityLabel();
+  },
+
+  /**
+     * Sets the location of the sample
+     *
+     * @method setSampleLocation
+     */
+  setSampleLocation: function(sampleLocation) {
+    if (!this.getSampleAvailability()) {
+      return;
+    }
+    this._sampleLocation = sampleLocation;
+    this.getGraphics().updateSampleLocationLabel();
   },
 
   /**
@@ -919,6 +942,7 @@ var Person = Class.create(AbstractPerson, {
       monozygotic:   {value : this.getMonozygotic(), inactive: inactiveMonozygothic, disabled: disableMonozygothic },
       evaluated:     {value : this.getEvaluated() },
       sample_availability:     {value : this.getSampleAvailability() },
+      sample_location:         {value : this.getSampleLocation(), inactive: !this.getSampleAvailability() },
       hpo_positive:  {value : phenotypeTerms},
       nocontact:     {value : this.getLostContact(), inactive: inactiveLostContact}
     };
@@ -985,6 +1009,9 @@ var Person = Class.create(AbstractPerson, {
     }
     if (this._sampleAvailability) {
       info['sampleAvailability'] = this._sampleAvailability;
+    }
+    if (this._sampleLocation) {
+      info['sampleLocation'] = this._sampleLocation;
     }
     if (this._carrierStatus) {
       info['carrierStatus'] = this._carrierStatus;
@@ -1053,6 +1080,9 @@ var Person = Class.create(AbstractPerson, {
       }
       if(info.hasOwnProperty('sampleAvailability') && this._sampleAvailability !== info.sampleAvailability) {
         this.setSampleAvailability(info.sampleAvailability);
+      }
+      if(info.hasOwnProperty('sampleLocation') && this._sampleLocation !== info.sampleLocation) {
+        this.setSampleLocation(info.sampleLocation);
       }
       if(info.hasOwnProperty('carrierStatus') && this._carrierStatus !== info.carrierStatus) {
         this.setCarrierStatus(info.carrierStatus);

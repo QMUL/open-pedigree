@@ -570,14 +570,14 @@ var PedigreeEditor = Class.create({
       },
       {
         'name' : 'evaluated',
-        'label' : 'Tested',
+        'label' : 'Tested *',
         'type' : 'checkbox',
         'tab': 'Tests',
         'function' : 'setEvaluated'
       },
       {
         'name' : 'sample_availability',
-        'label' : 'Sample availability',
+        'label' : 'Sample availability †',
         'type' : 'checkbox',
         'tab': 'Tests',
         'function' : 'setSampleAvailability'
@@ -586,7 +586,8 @@ var PedigreeEditor = Class.create({
         'name' : 'sample_location',
         'label' : 'Sample location',
         'type' : 'text',
-        'tab': 'Tests'
+        'tab': 'Tests',
+        'function' : 'setSampleLocation'
       }
     ], ['Personal', 'Clinical', 'Tests']);
   },
