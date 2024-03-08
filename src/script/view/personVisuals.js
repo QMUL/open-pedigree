@@ -417,7 +417,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   updateEvaluationLabel: function() {
     this._evalLabel && this._evalLabel.remove();
     if (this.getNode().getEvaluated()) {
-      this._evalLabel = this.getLabel('*', 'bottom-right');
+      this._evalLabel = this.getSymbolLabel('*', 'bottom-right');
     } else {
       this._evalLabel = null;
     }
@@ -431,7 +431,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   updateSampleAvailabilityLabel: function() {
     this._sampleAvailabilityLabel && this._sampleAvailabilityLabel.remove();
     if (this.getNode().getSampleAvailability()) {
-      this._sampleAvailabilityLabel = this.getLabel('†', 'top-right');
+      this._sampleAvailabilityLabel = this.getSymbolLabel('†', 'top-right');
     } else {
       this._sampleAvailabilityLabel = null;
     }
@@ -444,7 +444,7 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      */
   updateSampleLocationLabel: function() {
     this._sampleLocationLabel && this._sampleLocationLabel.remove();
-    if (this.getNode().getSampleLocation()) {
+    if (this.getNode().getSampleLocation() && this.getNode().getSampleAvailability()) {
       var text = '† ' + this.getNode().getSampleLocation();
       this._sampleLocationLabel = editor.getPaper().text(this.getX(), this.getY() + PedigreeEditorParameters.attributes.radius, text).attr(PedigreeEditorParameters.attributes.externalIDLabels);
     } else {
@@ -465,11 +465,11 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
 
 
   /**
-     * Return the graphics for a node's symbol or label
+     * Return the graphics for a node's symbol
      *
-     * @method getLabel
+     * @method getSymbolLabel
      */
-  getLabel: function(symbol, position) {
+  getSymbolLabel: function(symbol, position) {
     var x;
     var y;
     if (this.getNode().getLifeStatus() == 'aborted' || this.getNode().getLifeStatus() == 'miscarriage') {
