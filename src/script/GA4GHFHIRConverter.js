@@ -544,13 +544,13 @@ GA4GHFHIRConverter.extractDataFromObservation = function (observationResource, n
           foundCode = true;
           break;
         }
-        if (coding.system === 'custom' && coding.display === 'sampleAvailability'
+        if (coding.system === 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree' && coding.display === 'sampleAvailability'
           && observationResource.valueBoolean) {
           nodeData.properties['sampleAvailability'] = true;
           foundCode = true;
           break;
         }
-        if (coding.system === 'custom' && coding.display === 'sampleLocation'
+        if (coding.system === 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree' && coding.display === 'sampleLocation'
           && observationResource.valueString) {
           nodeData.properties['sampleLocation'] = observationResource.valueString;
           foundCode = true;
@@ -1553,7 +1553,7 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
       'status': 'preliminary',
       'code': {
         'coding': [{
-          'system': 'custom',
+          'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
           'code': null,
           'display': 'sampleAvailability'
         }]
@@ -1572,7 +1572,7 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
       'status': 'preliminary',
       'code': {
         'coding': [{
-          'system': 'custom',
+          'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
           'code': null,
           'display': 'sampleLocation'
         }]
