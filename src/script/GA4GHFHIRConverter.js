@@ -550,6 +550,12 @@ GA4GHFHIRConverter.extractDataFromObservation = function (observationResource, n
           foundCode = true;
           break;
         }
+        if (coding.system === 'custom' && coding.display === 'sampleLocation'
+          && observationResource.valueString) {
+          nodeData.properties['sampleLocation'] = observationResource.valueString;
+          foundCode = true;
+          break;
+        }
       }
     }
   }
@@ -1555,6 +1561,26 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
       'subject': { 'reference': this.patRefAsRef(ref) },
       'valueBoolean': true
     };
+    observationsForRef.push(fhirObservation);
+  }
+
+    // add sample availability as an observation
+  if (nodeProperties['sampleAvailability'] && nodeProperties['sampleLocation']) {
+    let fhirObservation = {
+      'resourceType': 'Observation',
+      'id': generateUUID(),
+      'status': 'preliminary',
+      'code': {
+        'coding': [{
+          'system': 'custom',
+          'code': null,
+          'display': 'sampleLocation'
+        }]
+      },
+      'subject': { 'reference': this.patRefAsRef(ref) },
+      'valueString': nodeProperties['sampleLocation']
+    };
+
     observationsForRef.push(fhirObservation);
   }
 
