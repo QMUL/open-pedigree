@@ -245,6 +245,7 @@ var Person = Class.create(AbstractPerson, {
       return;
     }
     this._sampleAvailability = sampleAvailability;
+    this.getGraphics().updateSampleLocationLabel();
     this.getGraphics().updateSampleAvailabilityLabel();
   },
 
