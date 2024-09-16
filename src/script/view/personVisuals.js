@@ -347,34 +347,50 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      * @method updateAgeLabel
      */
   updateAgeLabel: function() {
-    var text,
-      person = this.getNode();
+    // when only specifying birth year year, use ~ to indicate that
+    var text, person = this.getNode();
     if (person.isFetus()) {
       var date = person.getGestationAge();
       text = (date) ? date + ' weeks' : null;
-    } else if(person.getLifeStatus() == 'alive') {
+    } else if (person.getLifeStatus() == 'alive') {
+      // the person is alive, show date of birth if available
       if (person.getBirthDate()) {
-        var age = getAge(person.getBirthDate(), null);
-        if (age.indexOf('day') != -1) {
-          text = age;                                                                // 5 days
-        } else if (age.indexOf(' y') == -1) {
-          text = 'b. ' + person.getBirthDate().getFullYear() + ' (' + age + ')';     // b. 2014 (3 wk)
+        if (person.getIsYearDob()) {
+          text = 'b. ~' + person.getBirthYear();
         } else {
-          text = 'b. ' + person.getBirthDate().getFullYear();                        // b. 1972
+          var age = getAge(person.getBirthDate(), null);
+          if (age.indexOf('day') != -1) {
+            text = age;  // eg 5 days
+          } else if (age.indexOf(' y') == -1) {
+            text = 'b. ' + person.getBirthDateDMY() + ' (' + age + ')';  // eg b. 2014 (3 wk)
+          } else {
+            text = 'b. ' + person.getBirthDateDMY();  // eg b. 1972
+          }
         }
       }
     } else {
-      if(person.getDeathDate() && person.getBirthDate()) {
-        var age = getAge(person.getBirthDate(), person.getDeathDate());
-        if (age.indexOf('day') != -1 || age.indexOf('wk') != -1 || age.indexOf('mo') != -1) {
-          text = 'd. ' + person.getDeathDate().getFullYear() + ' (' + age + ')';
+      // the person is dead, check to see if date of birth and dead are
+      // available
+      if (person.getDeathDate() && person.getBirthDate()) {
+        if (person.getIsYearDob()) {
+          text =  '~' + person.getBirthYear() + ' – ' + person.getDeathDateDMY();
         } else {
-          text = person.getBirthDate().getFullYear() + ' – ' + person.getDeathDate().getFullYear();
+          var age = getAge(person.getBirthDate(), person.getDeathDate());
+          if (age.indexOf('day') != -1 || age.indexOf('wk') != -1 || age.indexOf('mo') != -1) {
+            text = 'd. ' + person.getDeathDateDMY() + ' (' + age + ')';
+          } else {
+            text = person.getBirthDateDMY() + ' – ' + person.getDeathDateDMY();
+          }
         }
       } else if (person.getDeathDate()) {
-        text = 'd. ' + person.getDeathDate().getFullYear();
+        text = 'd. ' + person.getDeathDateDMY();
       } else if(person.getBirthDate()) {
-        text = person.getBirthDate().getFullYear() + ' – ?';
+        if (person.getIsYearDob()) {
+          text = '~' + person.getBirthYear() + ' – ?';
+        }
+        else {
+          text = person.getBirthDateDMY() + ' – ?';
+        }
       }
     }
     this.getAgeLabel() && this.getAgeLabel().remove();

@@ -485,6 +485,24 @@ var NodeMenu = Class.create({
       var input = new Element('input', {type: 'hidden', name: data.name, value: ''});
       result.update(input);
       return result;
+    },
+    'number': function (data) {
+      var result = this._generateEmptyField(data);
+      var numberInput = new Element('input', {
+        type: 'number',
+        name: data.name,
+        min: data.min || 1000, // Optional: you can define min value
+        max: data.max || 9999, // Optional: you can define max value
+        step: data.step || 1, // Optional: you can define step value
+        value: data.default || 2000 // Optional: you can define default value
+      });
+
+      result.inputsContainer.insert(numberInput);
+      numberInput._getValue = function () {
+        return [this.value];
+      }.bind(numberInput);
+      this._attachFieldEventListeners(numberInput, ['change']);
+      return result;
     }
   },
 
@@ -709,6 +727,12 @@ var NodeMenu = Class.create({
       if (target) {
         target.value = value;
       }
+    },
+    'number' : function (container, value) {
+      var target = container.down('input[type=number]');
+      if (target) {
+        target.value = value;
+      }
     }
   },
 
@@ -767,7 +791,10 @@ var NodeMenu = Class.create({
     },
     'hidden' : function (container, inactive) {
       this._toggleFieldVisibility(container, inactive);
-    }
+    },
+    'number' : function (container, inactive) {
+      this._toggleFieldVisibility(container, inactive);
+    },
   },
 
   _setFieldDisabled : {
@@ -817,6 +844,9 @@ var NodeMenu = Class.create({
       // FIXME: Not implemented
     },
     'hidden' : function (container, inactive) {
+      // FIXME: Not implemented
+    },
+    'number' : function (container, inactive) {
       // FIXME: Not implemented
     }
   }

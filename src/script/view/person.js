@@ -40,9 +40,11 @@ var Person = Class.create(AbstractPerson, {
     this._lastName = '';
     this._lastNameAtBirth = '';
     this._birthDate = '';
+    this._birthYear = '';
     this._deathDate = '';
     this._conceptionDate = '';
     this._gestationAge = '';
+    this._isYearDob = false;
     this._isAdopted = false;
     this._externalID = '';
     this._lifeStatus = 'alive';
@@ -358,6 +360,7 @@ var Person = Class.create(AbstractPerson, {
 
       if(this.isFetus()) {
         this.setBirthDate('');
+        this.setIsYearDob(false);
         this.setAdopted(false);
         this.setChildlessStatus(null);
       }
@@ -432,13 +435,59 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
-     * Returns the the birth date of this Person
+     * Returns whether the user is specifying only the year of birth (true) or
+     * not (false)
+     *
+     * @returns Boolean
+     */
+  getIsYearDob: function() {
+    return this._isYearDob;
+  },
+
+  /**
+     * Sets the member variable _isYearDob, whether the user is specifying only
+     * the year of birth (true) or not (false)
+     *
+     * @param {Boolean} isYearDob
+     */
+  setIsYearDob: function(isYearDob) {
+    if (isYearDob === this._isYearDob) {
+      return;
+    }
+    this._isYearDob = isYearDob;
+    this.getGraphics().updateAgeLabel();
+  },
+
+  /**
+     * Returns the birth date of this Person
      *
      * @method getBirthDate
      * @return {Date}
      */
   getBirthDate: function() {
     return this._birthDate;
+  },
+
+  /**
+     * Returns the _birthYear
+     */
+  getBirthYear: function() {
+    return this._birthYear;
+  },
+
+  /**
+     * Returns the the birth date of this Person in day/month/year format
+     *
+     * @method getBirthDateDMY
+     * @return {String}
+     */
+  getBirthDateDMY: function() {
+    if (this._birthDate) {
+      return this._getDateDMY(this._birthDate)
+    }
+    else {
+      return '';
+    }
   },
 
   /**
@@ -451,8 +500,41 @@ var Person = Class.create(AbstractPerson, {
     newDate = newDate ? (new Date(newDate)) : '';
     if (!newDate || !this.getDeathDate() || newDate.getTime() < this.getDeathDate().getTime()) {
       this._birthDate = newDate;
+      // ensures getFullYear() is only called on Date
+      // newDate can be not instanceof Date when the user deletes dob
+      if (newDate instanceof Date) {
+        this._birthYear = newDate.getFullYear();
+      } else {
+        this._birthYear = '';
+      }
       this.getGraphics().updateAgeLabel();
     }
+  },
+
+  /**
+     * Replaces the birth year with newYear
+     *
+     * This will be called while the user is provided a number in the field when
+     * specifying only the year of birth. This is also called from
+     * setBirthDate() if the user is providing a full date of birth.
+     *
+     * @method setBirthYear
+     * @param {String or Number} newYear A new year to replace
+     */
+  setBirthYear: function(newYear) {
+    // ensure YYYY format for the year, if not, set dob to none
+    if (newYear.length != 4) {
+      this._birthYear = '';
+      this._birthDate = '';
+      this.getGraphics().updateAgeLabel();
+      return;
+    }
+
+    // for year of birth, set month and day to 1st Jan
+    this._birthYear = newYear;
+    var date = new Date("2000", "0", "1");
+    date.setFullYear(newYear);
+    this.setBirthDate(date);
   },
 
   /**
@@ -463,6 +545,21 @@ var Person = Class.create(AbstractPerson, {
      */
   getDeathDate: function() {
     return this._deathDate;
+  },
+
+  /**
+     * Returns the the death date of this Person in day/month/year format
+     *
+     * @method getDeathDateDMY
+     * @return {String}
+     */
+   getDeathDateDMY: function() {
+    if (this._deathDate) {
+      return this._getDateDMY(this._deathDate)
+    }
+    else {
+      return '';
+    }
   },
 
   /**
@@ -929,7 +1026,9 @@ var Person = Class.create(AbstractPerson, {
       last_name:     {value : this.getLastName()},
       external_id:   {value : this.getExternalID()},
       gender:        {value : this.getGender(), inactive: inactiveGenders},
-      date_of_birth: {value : this.getBirthDate(), inactive: this.isFetus()},
+      is_year_dob:   {value : this.getIsYearDob(), inactive: this.isFetus()},
+      date_of_birth: {value : this.getBirthDate(), inactive: this.isFetus() || this.getIsYearDob()},
+      year_of_birth: {value : this.getBirthYear(), inactive: this.isFetus() || !this.getIsYearDob()},
       carrier:       {value : this.getCarrierStatus(), disabled: inactiveCarriers},
       disorders:     {value : disorders},
       candidate_genes: {value : this.getGenes()},
@@ -974,6 +1073,9 @@ var Person = Class.create(AbstractPerson, {
     }
     if (this.getBirthDate() !== '') {
       info['dob'] = this.getBirthDate().toDateString();
+    }
+    if (this.getIsYearDob() != '') {
+      info['isYearDob'] = this.getIsYearDob();
     }
     if (this.isAdopted()) {
       info['isAdopted'] = this.isAdopted();
@@ -1045,6 +1147,9 @@ var Person = Class.create(AbstractPerson, {
       }
       if(info.dob && this.getBirthDate() !== info.dob) {
         this.setBirthDate(info.dob);
+      }
+      if (info.hasOwnProperty('isYearDob')) {
+        this.setIsYearDob(info.isYearDob);
       }
       if(info.disorders) {
         this.setDisorders(info.disorders);

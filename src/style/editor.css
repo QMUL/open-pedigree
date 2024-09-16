@@ -505,6 +505,10 @@
   width: 48%;
   float: right;
 }
+.menu-box .field-year_of_birth {
+  width: 48%;
+  float: left;
+}
 .menu-box .accepted-suggestions {
   margin: 0px 0px 0.3em !important;
 }

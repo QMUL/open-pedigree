@@ -556,6 +556,12 @@ GA4GHFHIRConverter.extractDataFromObservation = function (observationResource, n
           foundCode = true;
           break;
         }
+        if (coding.system === 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree' && coding.display === 'isYearDob'
+          && observationResource.valueBoolean) {
+          nodeData.properties['isYearDob'] = true;
+          foundCode = true;
+          break;
+        }
       }
     }
   }
@@ -1556,6 +1562,24 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
           'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
           'code': null,
           'display': 'sampleAvailability'
+        }]
+      },
+      'subject': { 'reference': this.patRefAsRef(ref) },
+      'valueBoolean': true
+    };
+    observationsForRef.push(fhirObservation);
+  }
+  // add sample availability as an observation
+  if (nodeProperties['isYearDob']) {
+    let fhirObservation = {
+      'resourceType': 'Observation',
+      'id': generateUUID(),
+      'status': 'preliminary',
+      'code': {
+        'coding': [{
+          'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
+          'code': null,
+          'display': 'isYearDob'
         }]
       },
       'subject': { 'reference': this.patRefAsRef(ref) },

@@ -483,6 +483,13 @@ var PedigreeEditor = Class.create({
         'function' : 'setHPO'
       },
       {
+        'name' : 'is_year_dob',
+        'label' : 'Year of birth only',
+        'type' : 'checkbox',
+        'tab': 'Personal',
+        'function' : "setIsYearDob"
+      },
+      {
         'name' : 'date_of_birth',
         'label' : 'Date of birth',
         'type' : 'date-picker',
@@ -497,6 +504,13 @@ var PedigreeEditor = Class.create({
         'tab': 'Personal',
         'format' : 'dd/MM/yyyy',
         'function' : 'setDeathDate'
+      },
+      {
+        'name': 'year_of_birth',
+        'label': 'Year of birth',
+        'type': 'number',
+        'tab': 'Personal',
+        'function': 'setBirthYear'
       },
       {
         'name' : 'state',
