@@ -20,8 +20,8 @@ document.observe('dom:loaded', function () {
     { 'value': 'Acromegaly', 'text': 'Acromegaly', 'color': '#808080' },
     { 'value': 'Prolactinoma', 'text': 'Prolactinoma', 'color': '#FF0000' },
     { 'value': 'NFPA', 'text': 'Non-functioning pituitary adenoma (NFPA)' , 'color': '#A020F0'},
-    { 'value': 'Corticotrophgantism', 'text': 'Cushings/corticotrophgantism' , 'color':  '#00FF00'},
-    { 'value': 'Gonadatroph', 'text': 'Gonadatroph', 'color':  '#964B00'}
+    { 'value': 'Corticotrophgantism', 'text': 'Cushing’s Disease / Corticotroph Adenoma' , 'color':  '#00FF00'},
+    { 'value': 'Gonadatroph', 'text': 'Gonadotroph Adenoma', 'color':  '#964B00'}
   ]
   var editor = new PedigreeEditor({
     'disorderOptions': {
