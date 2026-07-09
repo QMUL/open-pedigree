@@ -306,9 +306,9 @@ PedigreeImport.initFromPED = function(inputText, acceptOtherPhenotypes, markEval
 
     var phenotype = postMakeped ? parts[9] : parts[5];
     if (affectedValues.hasOwnProperty(phenotype)) {
-      var disorder = disorderNames.hasOwnProperty(phenotype) ? disorderNames[phenotype] : 'affected';
+      var disorders = disorderNames.hasOwnProperty(phenotype) ? [disorderNames[phenotype]] : [];
       newG.properties[id]['carrierStatus'] = 'affected';
-      newG.properties[id]['disorders']     = [disorder];
+      newG.properties[id]['disorders']     = disorders;
       if (markEvaluated) {
         newG.properties[id]['evaluated'] = true;
       }
@@ -878,7 +878,6 @@ PedigreeImport.initFromGEDCOM = function(inputText, markEvaluated, saveIDAsExter
             switch(value) {
             case 'O':
               properties['carrierStatus'] = 'affected';
-              properties['disorders']     = ['affected'];
               if (markEvaluated) {
                 properties['evaluated'] = true;
               }

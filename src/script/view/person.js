@@ -610,15 +610,7 @@ var Person = Class.create(AbstractPerson, {
     }
 
     if (numDisorders > 0 && status === '') {
-      if (numDisorders === 1 && this.getDisorders()[0] === 'affected') {
-        this.removeDisorder('affected');
-        this.getGraphics().updateDisorderShapes();
-      } else {
-        status = 'affected';
-      }
-    } else if (numDisorders === 0 && status === 'affected') {
-      this.addDisorder('affected');
-      this.getGraphics().updateDisorderShapes();
+      status = 'affected';
     }
 
     if (status !== this._carrierStatus) {
@@ -696,12 +688,6 @@ var Person = Class.create(AbstractPerson, {
     } else {
       alert('This person already has the specified disorder');
     }
-
-    // if any "real" disorder has been added
-    // the virtual "affected" disorder should be automatically removed
-    if (this.getDisorders().length > 1) {
-      this.removeDisorder('affected');
-    }
   },
 
   /**
@@ -715,10 +701,6 @@ var Person = Class.create(AbstractPerson, {
       editor.getDisorderLegend().removeCase(disorderID, this.getID());
       this._disorders = this.getDisorders().without(disorderID);
       this.getGraphics().updateDisorderShapes();
-    } else {
-      if (disorderID !== 'affected') {
-        alert('This person doesn\'t have the specified disorder');
-      }
     }
   },
 
@@ -1008,11 +990,12 @@ var Person = Class.create(AbstractPerson, {
       }
     }
 
+    // list of radio buttons in carrier to disable
     var inactiveCarriers = [];
     if (disorders.length > 0) {
-      if (disorders.length !== 1 || disorders[0].id !== 'affected') {
-        inactiveCarriers = [''];
-      }
+      inactiveCarriers = [''];
+    } else {
+      inactiveCarriers = ['affected'];
     }
     if (this.getLifeStatus() === 'aborted' || this.getLifeStatus() === 'miscarriage') {
       inactiveCarriers.push('presymptomatic');
