@@ -483,9 +483,12 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   /**
      * Return the graphics for a node's symbol
      *
+     * @param {String} symbol what symbol to put by the node
+     * @param {String} position 'top-left', 'top-right', 'bottom-right'
+     * @param {List} attributes list of html attributes
      * @method getSymbolLabel
      */
-  getSymbolLabel: function(symbol, position) {
+  getSymbolLabel: function(symbol, position, attributes = null) {
     var x;
     var y;
     if (this.getNode().getLifeStatus() == 'aborted' || this.getNode().getLifeStatus() == 'miscarriage') {
@@ -494,6 +497,9 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
         y = this.getY() + this._shapeRadius * 0.6;
       } else if (position === 'top-right') {
         x = this.getX() + this._shapeRadius * 1.6;
+        y = this.getY() - this._shapeRadius * 0.6;
+      } else if (position === 'top-left') {
+        x = this.getX() - this._shapeRadius * 1.6;
         y = this.getY() - this._shapeRadius * 0.6;
       }
     } else {
@@ -513,9 +519,15 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
       } else if (position === 'top-right') {
         x = this.getX() + this._shapeRadius*mult - 5;
         y = this.getY() - this._shapeRadius*mult - 5;
+      } else if (position === 'top-left') {
+        x = this.getX() - this._shapeRadius*mult - 5;
+        y = this.getY() - this._shapeRadius*mult - 5;
       }
     }
-    return editor.getPaper().text(x, y, symbol).attr(PedigreeEditorParameters.attributes.evaluationShape).toBack();
+    if (attributes === null) {
+      attributes = PedigreeEditorParameters.attributes.evaluationShape;
+    }
+    return editor.getPaper().text(x, y, symbol).attr(attributes).toBack();
   },
 
   /**
