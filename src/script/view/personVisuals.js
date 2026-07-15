@@ -37,9 +37,10 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     this._childlessShape = null;
     this._isSelected = false;
     this._carrierGraphic = null;
-    this._evalLabel = null;
+    this._testStatusLabel = null;
     this._sampleAvailabilityLabel = null;
     this._sampleLocationLabel = null;
+    this._isObligateGraphic = null;
     //console.log("person visuals end");
     //timer.printSinceLast("Person visuals time");
   },
@@ -106,8 +107,9 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
     }
     this.updateDisorderShapes();
     this.updateCarrierGraphic();
-    this.updateEvaluationLabel();
+    this.updateTestStatusLabel();
     this.updateSampleAvailabilityLabel();
+    this.updateIsObligateGraphics();
   },
 
   generateProbandArrow: function() {
@@ -426,16 +428,20 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   },
 
   /**
-     * Draws the evaluation status symbol for this Person
+     * Draws the test status symbol for this Person
      *
-     * @method updateEvaluationLabel
+     * @method updateTestStatusLabel
      */
-  updateEvaluationLabel: function() {
-    this._evalLabel && this._evalLabel.remove();
-    if (this.getNode().getEvaluated()) {
-      this._evalLabel = this.getSymbolLabel('*', 'bottom-right');
-    } else {
-      this._evalLabel = null;
+  updateTestStatusLabel: function() {
+    this._testStatusLabel && this._testStatusLabel.remove();
+    let testStatus = this.getNode().getTestStatus();
+    if (testStatus == '') {
+      this._testStatusLabel = null;
+      return;
+    } else if (testStatus == 'needs_testing') {
+      this._testStatusLabel = this.getSymbolLabel('?', 'bottom-right');
+    } else if (testStatus == 'tested') {
+      this._testStatusLabel = this.getSymbolLabel('*', 'bottom-right');
     }
   },
 
@@ -531,13 +537,13 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
   },
 
   /**
-     * Returns this Person's evaluation label
+     * Returns this Person's test status label
      *
-     * @method getEvaluationGraphics
+     * @method getTestStatus
      * @return {Raphael.el}
      */
-  getEvaluationGraphics: function() {
-    return this._evalLabel;
+  getTestStatusLabel: function() {
+    return this._testStatusLabel;
   },
 
   /**
@@ -611,6 +617,22 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      */
   getCarrierGraphics: function() {
     return this._carrierGraphic;
+  },
+
+  /**
+     * @method
+     */
+  updateIsObligateGraphics: function() {
+    this._isObligateGraphic && this._isObligateGraphic.remove();
+    if (this.getNode().getIsObligate()) {
+      this._isObligateGraphic = this.getSymbolLabel('OB', 'top-left', {'font-size': 20, 'font-family': 'Arial'});
+    } else {
+      this._isObligateGraphic = null;
+    }
+  },
+
+  getIsObligateGraphics: function() {
+    return this._isObligateGraphic;
   },
 
   /**
@@ -813,7 +835,15 @@ var PersonVisuals = Class.create(AbstractPersonVisuals, {
      */
   getAllGraphics: function($super) {
     //console.log("Node " + this.getNode().getID() + " getAllGraphics");
-    return $super().push(this.getHoverBox().getBackElements(), this.getLabels(), this.getCarrierGraphics(), this.getEvaluationGraphics(), this.getSampleAvailabilityGraphics(), this.getHoverBox().getFrontElements());
+    return $super().push(
+      this.getHoverBox().getBackElements(),
+      this.getLabels(),
+      this.getCarrierGraphics(),
+      this.getTestStatusLabel(),
+      this.getSampleAvailabilityGraphics(),
+      this.getIsObligateGraphics(),
+      this.getHoverBox().getFrontElements()
+    );
   },
 
   /**

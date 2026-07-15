@@ -538,9 +538,24 @@ GA4GHFHIRConverter.extractDataFromObservation = function (observationResource, n
           foundCode = true;
           break;
         }
+        if (coding.system === 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree' && coding.display === 'isObligate'
+          && observationResource.valueBoolean) {
+          nodeData.properties['isObligate'] = true;
+          foundCode = true;
+          break;
+        }
+        // for loading evaluated from version itsr-v3.3.0 and before
+        // convert it to the corresponding testStatus
         if (coding.system === 'http://loinc.org' && coding.code === '96172-2'
           && observationResource.valueBoolean) {
-          nodeData.properties['evaluated'] = true;
+          nodeData.properties['testStatus'] = 'tested';
+          foundCode = true;
+          break;
+        }
+        // for loading testStatus from version itsr-v3.4.0 and after
+        if (coding.system === 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree' && coding.display === 'testStatus'
+          && observationResource.valueString) {
+          nodeData.properties['testStatus'] = observationResource.valueString;
           foundCode = true;
           break;
         }
@@ -1533,21 +1548,39 @@ GA4GHFHIRConverter.addObservations = function (nodeProperties, ref, observations
     };
     observationsForRef.push(fhirObservation);
   }
-  // add evaluated as an observation
-  if (nodeProperties['evaluated']) {
+  // add obligate carrier as an observation
+  if (nodeProperties['isObligate']) {
     let fhirObservation = {
       'resourceType': 'Observation',
       'id': generateUUID(),
       'status': 'preliminary',
       'code': {
         'coding': [{
-          'system': 'http://loinc.org',
-          'code': '96172-2',
-          'display': 'Clinical genetics Evaluation note'
+          'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
+          'code': null,
+          'display': 'isObligate'
         }]
       },
       'subject': { 'reference': this.patRefAsRef(ref) },
       'valueBoolean': true
+    };
+    observationsForRef.push(fhirObservation);
+  }
+  // add test status as an observation
+  if (nodeProperties['testStatus']) {
+    let fhirObservation = {
+      'resourceType': 'Observation',
+      'id': generateUUID(),
+      'status': 'preliminary',
+      'code': {
+        'coding': [{
+          'system': 'https://github.research.its.qmul.ac.uk/itsr-rse/open-pedigree',
+          'code': null,
+          'display': 'testStatus'
+        }]
+      },
+      'subject': { 'reference': this.patRefAsRef(ref) },
+      'valueString': nodeProperties['testStatus']
     };
     observationsForRef.push(fhirObservation);
   }

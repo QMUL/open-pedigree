@@ -51,11 +51,12 @@ var Person = Class.create(AbstractPerson, {
     this._childlessStatus = null;
     this._carrierStatus = '';
     this._disorders = [];
+    this._isObligate = false;
     this._phenotypes = [];
     this._candidateGenes = [];
     this._twinGroup = null;
     this._monozygotic = false;
-    this._evaluated = false;
+    this._testStatus = '';
     this._sampleAvailability = false;
     this._sampleLocation = '';
     this._lostContact = false;
@@ -196,13 +197,15 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
-     * Returns the documented evaluation status
+     * Return the test status
      *
-     * @method getEvaluated
-     * @return {Boolean}
+     * Can be either '', 'needs_testing' or 'tested'
+     *
+     * @method getTestStatus
+     * @return {string}
      */
-  getEvaluated: function() {
-    return this._evaluated;
+  getTestStatus: function() {
+    return this._testStatus;
   },
 
   /**
@@ -225,16 +228,17 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
-     * Sets the documented evaluation status
+     * Sets the test status
      *
-     * @method setEvaluated
+     * @param testStatus string - either '', 'needs_testing' or 'tested'
+     * @method setTestStatus
      */
-  setEvaluated: function(evaluationStatus) {
-    if (evaluationStatus === this._evaluated) {
+  setTestStatus: function(testStatus) {
+    if (testStatus === null || testStatus === undefined) {
       return;
     }
-    this._evaluated = evaluationStatus;
-    this.getGraphics().updateEvaluationLabel();
+    this._testStatus = testStatus;
+    this.getGraphics().updateTestStatusLabel();
   },
 
   /**
@@ -630,6 +634,30 @@ var Person = Class.create(AbstractPerson, {
   },
 
   /**
+     * Returns if this individual is an obligate carrier
+     *
+     * @method getIsObligate
+     * @returns {Boolean}
+     */
+  getIsObligate: function() {
+    return this._isObligate;
+  },
+
+  /**
+     * Sets the member variable _isObligate
+     *
+     * @method setIsObligate
+     * @param {Boolean} isObligate
+     */
+  setIsObligate: function(isObligate) {
+    if (isObligate === this._isObligate) {
+      return;
+    }
+    this._isObligate = isObligate;
+    this.getGraphics().updateIsObligateGraphics();
+  },
+
+  /**
      * Returns the list of all colors associated with the node
      * (e.g. all colors of all disorders and all colors of all the genes)
      * @method getAllNodeColors
@@ -1014,6 +1042,7 @@ var Person = Class.create(AbstractPerson, {
       year_of_birth: {value : this.getBirthYear(), inactive: this.isFetus() || !this.getIsYearDob()},
       carrier:       {value : this.getCarrierStatus(), disabled: inactiveCarriers},
       disorders:     {value : disorders},
+      is_obligate:   {value : this.getIsObligate()},
       candidate_genes: {value : this.getGenes()},
       adopted:       {value : this.isAdopted(), inactive: cantChangeAdopted},
       state:         {value : this.getLifeStatus(), inactive: inactiveStates},
@@ -1023,7 +1052,7 @@ var Person = Class.create(AbstractPerson, {
       childlessSelect: {value : this.getChildlessStatus() ? this.getChildlessStatus() : 'none', inactive : childlessInactive},
       placeholder:   {value : false, inactive: true },
       monozygotic:   {value : this.getMonozygotic(), inactive: inactiveMonozygothic, disabled: disableMonozygothic },
-      evaluated:     {value : this.getEvaluated() },
+      test_status:   {value : this.getTestStatus() },
       sample_availability:     {value : this.getSampleAvailability() },
       sample_location:         {value : this.getSampleLocation(), inactive: !this.getSampleAvailability() },
       hpo_positive:  {value : phenotypeTerms},
@@ -1078,6 +1107,9 @@ var Person = Class.create(AbstractPerson, {
     if (this.getDisorders().length > 0) {
       info['disorders'] = this.getDisordersForExport();
     }
+    if (this.getIsObligate() != '') {
+      info['isObligate'] = this.getIsObligate();
+    }
     if (this.getPhenotypes().length > 0) {
       info['hpoTerms'] = this.getPhenotypesForExport();
     }
@@ -1090,8 +1122,8 @@ var Person = Class.create(AbstractPerson, {
     if (this._monozygotic) {
       info['monozygotic'] = this._monozygotic;
     }
-    if (this._evaluated) {
-      info['evaluated'] = this._evaluated;
+    if (this._testStatus) {
+      info['testStatus'] = this._testStatus;
     }
     if (this._sampleAvailability) {
       info['sampleAvailability'] = this._sampleAvailability;
@@ -1137,6 +1169,9 @@ var Person = Class.create(AbstractPerson, {
       if(info.disorders) {
         this.setDisorders(info.disorders);
       }
+      if (info.hasOwnProperty('isObligate') && this.getIsObligate() !== info.isObligate) {
+        this.setIsObligate(info.isObligate);
+      }
       if(info.hpoTerms) {
         this.setPhenotypes(info.hpoTerms);
       }
@@ -1164,8 +1199,8 @@ var Person = Class.create(AbstractPerson, {
       if(info.hasOwnProperty('monozygotic') && this._monozygotic !== info.monozygotic) {
         this.setMonozygotic(info.monozygotic);
       }
-      if(info.hasOwnProperty('evaluated') && this._evaluated !== info.evaluated) {
-        this.setEvaluated(info.evaluated);
+      if(info.hasOwnProperty('testStatus') && this._testStatus !== info.testStatus) {
+        this.setTestStatus(info.testStatus);
       }
       if(info.hasOwnProperty('sampleAvailability') && this._sampleAvailability !== info.sampleAvailability) {
         this.setSampleAvailability(info.sampleAvailability);

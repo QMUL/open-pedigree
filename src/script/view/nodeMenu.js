@@ -324,6 +324,9 @@ var NodeMenu = Class.create({
           return [this.value];
         }.bind(radioButton);
         values.insert(radioLabel);
+        if (data.class == 'field-values-single-column') {
+          values.insert(new Element('br'));
+        }
         _this._attachFieldEventListeners(radioButton, ['click']);
       };
       data.values.each(_generateRadioButton);

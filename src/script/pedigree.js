@@ -462,6 +462,13 @@ var PedigreeEditor = Class.create({
         'function' : 'setCarrierStatus'
       },
       {
+        'name' : 'is_obligate',
+        'label' : 'Obligate carrier',
+        'type' : 'checkbox',
+        'tab': 'Clinical',
+        'function' : 'setIsObligate'
+      },
+      {
         'name' : 'disorders',
         'label' : 'Disorders',
         'type' : 'disease-picker',
@@ -583,11 +590,17 @@ var PedigreeEditor = Class.create({
         'function' : 'setComments'
       },
       {
-        'name' : 'evaluated',
-        'label' : 'Tested *',
-        'type' : 'checkbox',
+        'name' : 'test_status',
+        'label' : 'Test Status',
+        'type' : 'radio',
         'tab': 'Tests',
-        'function' : 'setEvaluated'
+        'class': 'field-values-single-column',
+        'values' : [
+          { 'actual' : '', 'displayed' : 'None' },
+          { 'actual' : 'needs_testing', 'displayed' : 'Needs testing' },
+          { 'actual' : 'tested', 'displayed' : 'Tested' }
+        ],
+        'function' : 'setTestStatus'
       },
       {
         'name' : 'sample_availability',
