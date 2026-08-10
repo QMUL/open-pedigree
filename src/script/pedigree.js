@@ -417,7 +417,7 @@ var PedigreeEditor = Class.create({
         'label' : 'Gender',
         'type' : 'radio',
         'tab': 'Personal',
-        'columns': 3,
+        'class': 'field-values-3-columns',
         'values' : [
           { 'actual' : 'M', 'displayed' : 'Male' },
           { 'actual' : 'F', 'displayed' : 'Female' },
@@ -517,7 +517,7 @@ var PedigreeEditor = Class.create({
         'label' : 'Individual is',
         'type' : 'radio',
         'tab': 'Personal',
-        'columns': 3,
+        'class': 'field-values-3-columns',
         'values' : [
           { 'actual' : 'alive', 'displayed' : 'Alive' },
           { 'actual' : 'stillborn', 'displayed' : 'Stillborn' },
@@ -635,7 +635,7 @@ var PedigreeEditor = Class.create({
         'name' : 'gender',
         'label' : 'Gender',
         'type' : 'radio',
-        'columns': 3,
+        'class': 'field-values-3-columns',
         'values' : [
           { 'actual' : 'M', 'displayed' : 'Male' },
           { 'actual' : 'F', 'displayed' : 'Female' },

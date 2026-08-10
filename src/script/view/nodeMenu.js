@@ -312,7 +312,7 @@ var NodeMenu = Class.create({
   _generateField : {
     'radio' : function (data) {
       var result = this._generateEmptyField(data);
-      var columnClass = data.columns ? 'field-values-' + data.columns + '-columns' : 'field-values';
+      var columnClass = data.class ?? 'field-values';
       var values = new Element('div', {'class' : columnClass});
       result.inputsContainer.insert(values);
       var _this = this;
